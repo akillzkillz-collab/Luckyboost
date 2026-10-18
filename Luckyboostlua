@@ -1,0 +1,194 @@
+--[[\
+    Project: Ultimate Blox Fruit Utility Hub [GitHub Repository]
+    Author / Developer: GitHub Deployment Edition
+    Target Environment: Mobile / Delta Executor
+]]--
+
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Padam GUI lama jika ada untuk elak ralat bertindih
+pcall(function()
+    if CoreGui:FindFirstChild("BloxFruitGitHubHub") then 
+        CoreGui.BloxFruitGitHubHub:Destroy() 
+    end
+end)
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "BloxFruitGitHubHub"
+screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.Parent = CoreGui
+
+-- 1. IKON GEAR APUNG (Butang Utama)
+local gearBtn = Instance.new("TextButton")
+gearBtn.Size = UDim2.new(0, 56, 0, 56)
+gearBtn.Position = UDim2.new(0.05, 0, 0.25, 0)
+gearBtn.BackgroundColor3 = Color3.fromRGB(15, 18, 28)
+gearBtn.Text = "⚙️"
+gearBtn.TextSize = 28
+gearBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+gearBtn.Draggable = true
+gearBtn.Active = true
+gearBtn.Parent = screenGui
+
+local btnCorner = Instance.new("UICorner")
+btnCorner.CornerRadius = UDim.new(0, 16)
+btnCorner.Parent = gearBtn
+
+local btnStroke = Instance.new("UIStroke")
+btnStroke.Color = Color3.fromRGB(80, 140, 255)
+btnStroke.Thickness = 2
+btnStroke.Parent = gearBtn
+
+-- 2. PAPARAN UTAMA MENU HUB
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 340, 0, 330)
+mainFrame.Position = UDim2.new(0.5, -170, 0.5, -165)
+mainFrame.BackgroundColor3 = Color3.fromRGB(12, 14, 22)
+mainFrame.Visible = false
+mainFrame.Draggable = true
+mainFrame.Active = true
+mainFrame.Parent = screenGui
+
+local frameCorner = Instance.new("UICorner")
+frameCorner.CornerRadius = UDim.new(0, 16)
+frameCorner.Parent = mainFrame
+
+local frameStroke = Instance.new("UIStroke")
+frameStroke.Color = Color3.fromRGB(80, 140, 255)
+frameStroke.Thickness = 2
+frameStroke.Parent = mainFrame
+
+-- Tajuk Menu
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 42)
+titleLabel.BackgroundColor3 = Color3.fromRGB(20, 24, 36)
+titleLabel.Text = "  ⚡ ULTIMATE BLOX FRUIT HUB [GITHUB]"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextSize = 11
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = mainFrame
+
+local titleCorner = Instance.new("UICorner")
+titleCorner.CornerRadius = UDim.new(0, 16)
+titleCorner.Parent = titleLabel
+
+-- Fungsi Pembantu untuk Butang Fitur (Toggle Features)
+local function createFeatureToggle(name, yPos, callback)
+    local rowLabel = Instance.new("TextLabel")
+    rowLabel.Size = UDim2.new(0.65, 0, 0, 32)
+    rowLabel.Position = UDim2.new(0.06, 0, 0, yPos)
+    rowLabel.BackgroundTransparency = 1
+    rowLabel.Text = name
+    rowLabel.TextColor3 = Color3.fromRGB(220, 230, 245)
+    rowLabel.TextSize = 12
+    rowLabel.Font = Enum.Font.GothamMedium
+    rowLabel.TextXAlignment = Enum.TextXAlignment.Left
+    rowLabel.Parent = mainFrame
+
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(0, 46, 0, 24)
+    toggleBtn.Position = UDim2.new(0.76, 0, 0, yPos + 4)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(45, 50, 65)
+    toggleBtn.Text = ""
+    toggleBtn.Parent = mainFrame
+
+    local tCorner = Instance.new("UICorner")
+    tCorner.CornerRadius = UDim.new(1, 0)
+    tCorner.Parent = toggleBtn
+
+    local circle = Instance.new("Frame")
+    circle.Size = UDim2.new(0, 18, 0, 18)
+    circle.Position = UDim2.new(0, 3, 0.5, -9)
+    circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    circle.Parent = toggleBtn
+
+    local cCorner = Instance.new("UICorner")
+    cCorner.CornerRadius = UDim.new(1, 0)
+    cCorner.Parent = circle
+
+    local active = false
+    toggleBtn.MouseButton1Click:Connect(function()
+        active = not active
+        if active then
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+            circle:TweenPosition(UDim2.new(1, -21, 0.5, -9), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.15, true)
+        else
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(45, 50, 65)
+            circle:TweenPosition(UDim2.new(0, 3, 0.5, -9), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.15, true)
+        end
+        pcall(function()
+            callback(active)
+        end)
+    end)
+end
+
+-- Senarai Fitur Utama
+createFeatureToggle("Super Speed (Laju)", 55, function(state)
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = state and 80 or 16
+    end
+end)
+
+createFeatureToggle("High Jump (Lompat Tinggi)", 98, function(state)
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.JumpPower = state and 150 or 50
+    end
+end)
+
+createFeatureToggle("Fullbright (Terang Malam)", 141, function(state)
+    local lighting = game:GetService("Lighting")
+    if state then
+        lighting.Brightness = 2
+        lighting.ClockTime = 14
+    else
+        lighting.Brightness = 1
+        lighting.ClockTime = 0
+    end
+end)
+
+createFeatureToggle("Noclip Bypass (Tembus Dinding)", 184, function(state)
+    _G.NoclipEnabled = state
+    RunService.Stepped:Connect(function()
+        if _G.NoclipEnabled and LocalPlayer.Character then
+            for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+end)
+
+createFeatureToggle("Lucky Boost Simulation", 227, function(state)
+    -- Simulasi tetapan visual boost untuk diuji
+    print("Lucky Boost Mode: " .. tostring(state))
+end)
+
+-- Kotak Status Informasi Cabaran Atuk
+local statusBox = Instance.new("TextLabel")
+statusBox.Size = UDim2.new(0.88, 0, 0, 48)
+statusBox.Position = UDim2.new(0.06, 0, 0, 270)
+statusBox.BackgroundColor3 = Color3.fromRGB(18, 22, 32)
+statusBox.Text = "Status: GitHub Repository Ready 🚀\nChallenging Grandpa's Server Security!"
+statusBox.TextColor3 = Color3.fromRGB(100, 220, 140)
+statusBox.TextSize = 10
+statusBox.Font = Enum.Font.Code
+statusBox.Parent = mainFrame
+
+local statusCorner = Instance.new("UICorner")
+statusCorner.CornerRadius = UDim.new(0, 8)
+statusCorner.Parent = statusBox
+
+-- Logik Butang Buka/Tutup Menu
+local isOpen = false
+gearBtn.MouseButton1Click:Connect(function()
+    isOpen = not isOpen
+    mainFrame.Visible = isOpen
+end)
+
+print("Ultimate Blox Fruit Hub successfully deployed for GitHub!")
